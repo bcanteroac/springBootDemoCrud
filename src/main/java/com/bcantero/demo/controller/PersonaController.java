@@ -17,7 +17,7 @@ public class PersonaController {
     @Autowired
     PersonaService personaService;
 
-    @GetMapping("/pesonas")
+    @GetMapping("/personas")
     public ResponseEntity<List<Persona>> findAll(){
         try {
             List<Persona> personaList = personaService.findAll();
