@@ -1,6 +1,7 @@
 package com.bcantero.demo.controller;
 
 import com.bcantero.demo.entity.Persona;
+import com.bcantero.demo.entity.PersonaLogin;
 import com.bcantero.demo.service.PersonaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,30 +19,52 @@ public class PersonaController {
     PersonaService personaService;
 
     @GetMapping("/personas")
-    public ResponseEntity<List<Persona>> findAll(){
+    public ResponseEntity<List<Persona>> findAll() {
         try {
             List<Persona> personaList = personaService.findAll();
-            if (!personaList.isEmpty()){
+            if (!personaList.isEmpty()) {
                 return ResponseEntity.ok(personaList);
-            }else {
+            } else {
                 return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
     @PostMapping("/registrar")
-    public ResponseEntity<?> savePersona(@RequestBody Persona persona){
+    public ResponseEntity<?> savePersona(@RequestBody Persona persona) {
         try {
-            if (!(persona == null)){
+            if (!(persona == null)) {
                 return ResponseEntity.status(HttpStatus.OK).body(personaService.savePersona(persona));
-            }else {
+            } else {
                 return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(("{\"error\":\"" + e.getMessage() + "\"}"));
         }
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity validarUsuario(@RequestBody PersonaLogin personaLogin) {
+
+        try {
+            if (!(personaLogin == null)) {
+                String nombre = personaLogin.getNombre();
+                String telefono = personaLogin.getTelefono();
+                Persona persona = personaService.validarUsuario(nombre, telefono);
+                if (!(persona == null)){
+                    return ResponseEntity.status(HttpStatus.OK).body(persona);
+                }else {
+                    return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+                }
+            } else {
+                return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(("{\"error\":\"" + e.getMessage() + "\"}"));
+        }
+
     }
 
     @GetMapping("/{id}")
@@ -85,6 +108,28 @@ public class PersonaController {
 
         }
         return false;
+    }
+
+    @GetMapping("/corre")
+    public String llamarCorre(int valocidad){
+        valocidad = 0;
+
+        if (!(valocidad == 0)){
+           return personaCorre(23) ;
+        }
+
+        return null;
+    }
+
+    public String personaCorre(){
+
+
+        return "Esta corriendo";
+    }
+
+    public String personaCorre(int velocidad){
+
+        return "Esta corriendo mas rapido";
     }
 
 }

@@ -2,6 +2,7 @@ package com.bcantero.demo.service;
 
 import com.bcantero.demo.entity.Persona;
 import com.bcantero.demo.repository.PersonaRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -9,6 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@Slf4j
 public class PersonaService {
 
     @Autowired
@@ -69,5 +71,20 @@ public class PersonaService {
             return true;
         }
         return false;
+    }
+
+    public Persona validarUsuario(String nombre, String telefono){
+
+        try {
+            Persona personaValidar = personaRepository.validarUsuario(nombre, telefono);
+            if (!(personaValidar == null)){
+                return personaValidar;
+            }else {
+                return null;
+            }
+        }catch (Exception e){
+            log.error(e.getMessage());
+            return null;
+        }
     }
 }
